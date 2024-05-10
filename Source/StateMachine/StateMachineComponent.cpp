@@ -18,28 +18,63 @@ UStateMachineComponent::UStateMachineComponent()
 void UStateMachineComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	TSet<UActorComponent*> OwnerComponents;
+	OwnerComponents = GetOwner()->GetComponents();
+	for (UActorComponent* component : OwnerComponents) 
+	{
+		UStateComponent* StateComponent = Cast<UStateComponent>(component);
+		if (StateComponent) 
+		{
+			RegisterState(StateComponent->StateType, StateComponent);
+		}
+	}
+	CurrentState = InitialState;
+	if (StateComponents.Contains(CurrentState))
+	{
+		UStateComponent* CurrentStateComponent = StateComponents[CurrentState];
+		CurrentStateComponent->EnterState();
+	}
 
-	// ...
-	
 }
 
+
+void UStateMachineComponent::RegisterState(EState StateType, UStateComponent* State)
+{
+	StateComponents.Add(StateType, State);
+}
 
 // Called every frame
 void UStateMachineComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	
-	UStateComponent* CurrentStateComponent = StateComponents[CurrentState];
-	CurrentStateComponent->PlayState();
+	if (StateComponents.Contains(CurrentState)) 
+	{
+		UStateComponent* CurrentStateComponent = StateComponents[CurrentState];
+		CurrentStateComponent->PlayState();
+	}
 	// ...
 }
 
 void UStateMachineComponent::ChangeState(EState NextState) 
 {
-	UStateComponent* CurrentStateComponent = StateComponents[CurrentState];
-	CurrentStateComponent->ExitState();
-	CurrentState = NextState;
-	CurrentStateComponent = StateComponents[CurrentState];
-	CurrentStateComponent->EnterState();
+	if (StateComponents.Contains(CurrentState)&&StateComponents.Contains(NextState)) 
+	{
+		UStateComponent* CurrentStateComponent = StateComponents[CurrentState];
+		CurrentStateComponent->ExitState();
+		CurrentState = NextState;
+		CurrentStateComponent = StateComponents[CurrentState];
+		CurrentStateComponent->EnterState();
+	}
+}
+
+void UStateMachineComponent::OnRegister()
+{
+	Super::OnRegister();
+	APawn* PawnOwner = Cast<APawn>(GetOwner());
+	if (!PawnOwner) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("State Machine can only be Attached to a PawnActor"));
+		UnregisterComponent();
+	}
 }
 

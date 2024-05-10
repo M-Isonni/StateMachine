@@ -8,7 +8,7 @@
 #include "StateMachineComponent.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent), Blueprintable)
 class STATEMACHINE_API UStateMachineComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -16,6 +16,8 @@ class STATEMACHINE_API UStateMachineComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UStateMachineComponent();
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	EState InitialState = EState::Patrol;
 
 protected:
 	// Called when the game starts
@@ -24,6 +26,7 @@ protected:
 private:
 	EState CurrentState;
 	TMap<EState, UStateComponent*> StateComponents;
+	void RegisterState(EState StateType, UStateComponent* State);
 
 public:	
 	// Called every frame
@@ -31,6 +34,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual void ChangeState(EState NextState);
+
+	virtual void OnRegister() override;
 
 
 };

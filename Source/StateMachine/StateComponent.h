@@ -14,7 +14,7 @@ enum class EState
 	Attack
 };
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Abstract )
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Abstract, Blueprintable )
 class STATEMACHINE_API UStateComponent : public UActorComponent
 {
 	GENERATED_BODY()

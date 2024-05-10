@@ -2,6 +2,11 @@
 
 
 #include "FSMPawn.h"
+//The following includes
+#include "StateMachineComponent.h"
+#include "AttackComponent.h"
+#include "ChaseComponent.h"
+#include "PatrolComponent.h"
 
 // Sets default values
 AFSMPawn::AFSMPawn()

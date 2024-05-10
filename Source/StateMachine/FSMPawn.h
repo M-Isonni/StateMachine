@@ -3,10 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "StateMachineComponent.h"
-#include "AttackComponent.h"
-#include "ChaseComponent.h"
-#include "PatrolComponent.h"
 #include "GameFramework/Pawn.h"
 #include "FSMPawn.generated.h"
 
@@ -18,14 +14,16 @@ class STATEMACHINE_API AFSMPawn : public APawn
 public:
 	// Sets default values for this pawn's properties
 	AFSMPawn();
+	
+	
 	UPROPERTY()
-	UAttackComponent* AttackComponent;
+	class UAttackComponent* AttackComponent; //forward declaration
 	UPROPERTY()
-	UChaseComponent* ChaseComponent;
+	class UChaseComponent* ChaseComponent;//forward declaration
 	UPROPERTY()
-	UPatrolComponent* PatrolComponent;
+	class UPatrolComponent* PatrolComponent;//forward declaration
 	UPROPERTY()
-	UStateMachineComponent* StateMachineComponent;
+	class UStateMachineComponent* StateMachineComponent;//forward declaration
 
 protected:
 	// Called when the game starts or when spawned
